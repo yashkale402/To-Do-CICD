@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Edit Todo Item</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .edit-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            color: #666;
+            margin-bottom: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+
+        .back-link:hover {
+            color: #4CAF50;
+            background: #e8f5e8;
+            transform: translateX(-5px);
+        }
+
+        .back-link::before {
+            content: '←';
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+            font-weight: 600;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            border-radius: 2px;
+        }
+
+        .current-todo {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .current-todo-label {
+            font-size: 0.9em;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .current-todo-text {
+            font-size: 1.2em;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .edit-form {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #555;
+            font-size: 1.1em;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        input[type="submit"] {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        input[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        input[type="submit"]:active {
+            transform: translateY(0);
+        }
+
+        .cancel-btn {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+            text-align: center;
+        }
+
+        .cancel-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .edit-container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 1.6em;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            input[type="submit"],
+            .cancel-btn {
+                width: 100%;
+            }
+        }
+
+        /* Focus indicator for accessibility */
+        .edit-container *:focus {
+            outline: 2px solid #4CAF50;
+            outline-offset: 2px;
+        }
+
+        /* Loading state */
+        .form-submitting {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .form-submitting input[type="submit"]:after {
+            content: ' ...';
+        }
+    </style>
+</head>
+
+<body>
+    <div class="edit-container">
+        <a href="javascript:history.back()" class="back-link">Back to List</a>
+        
+        <h1>Edit Todo</h1>
+        
+        <div class="current-todo">
+            <div class="current-todo-label">Current Todo:</div>
+            <div class="current-todo-text"><%- todo %></div>
+        </div>
+
+        <form action="/todo/edit/<%= todoIdx %>" method="post" class="edit-form" id="editForm">
+            <input type="hidden" name="_method" value="PUT">
+            
+            <div class="form-group">
+                <label for="editTodo">Change to:</label>
+                <input type="text" name="editTodo" id="editTodo" placeholder="Enter new todo text..." autofocus value="<%- todo %>" />
+            </div>
+
+            <div class="button-group">
+                <input type="submit" value="Save Changes" />
+                <a href="javascript:history.back()" class="cancel-btn">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('editForm');
+            const editInput = document.getElementById('editTodo');
+            
+            // Select all text when input is focused
+            editInput.addEventListener('focus', function() {
+                this.select();
+            });
+
+            // Form validation and submission handling
+            form.addEventListener('submit', function(e) {
+                const todoText = editInput.value.trim();
+                
+                if (!todoText) {
+                    e.preventDefault();
+                    editInput.focus();
+                    editInput.style.borderColor = '#ff6b6b';
+                    editInput.style.boxShadow = '0 0 0 3px rgba(255, 107, 107, 0.1)';
+                    
+                    setTimeout(() => {
+                        editInput.style.borderColor = '#e1e8ed';
+                        editInput.style.boxShadow = 'none';
+                    }, 2000);
+                    return;
+                }
+
+                // Add loading state
+                form.classList.add('form-submitting');
+            });
+
+            // Handle Enter key
+            editInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    form.submit();
+                }
+            });
+
+            // Handle Escape key to cancel
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    history.back();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

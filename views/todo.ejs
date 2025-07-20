@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Todo List APP test</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+
+        .todo-list {
+            padding: 30px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            background: #fff;
+            border: none;
+            margin-bottom: 15px;
+            padding: 20px;
+            border-radius: 12px;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.5s ease-out;
+            border-left: 4px solid #4CAF50;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        ul li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        ul li .todo-content {
+            font-size: 1.1em;
+            font-weight: 500;
+            color: #333;
+            margin-right: 80px;
+            line-height: 1.4;
+        }
+
+        .action-buttons {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .delete-btn, .edit-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-decoration: none;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .delete-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+        }
+
+        .delete-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .edit-btn {
+            background: linear-gradient(135deg, #ffd93d, #ff9800);
+            color: white;
+        }
+
+        .edit-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+        }
+
+        .add-form {
+            background: #fff;
+            padding: 30px;
+            margin-top: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #555;
+            font-size: 1.1em;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        input[type="submit"] {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        input[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        input[type="submit"]:active {
+            transform: translateY(0);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .empty-state-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+                padding: 20px;
+            }
+
+            .todo-list {
+                padding: 20px;
+            }
+
+            ul li {
+                padding: 15px;
+            }
+
+            .action-buttons {
+                position: static;
+                transform: none;
+                margin-top: 15px;
+                justify-content: flex-end;
+            }
+
+            ul li .todo-content {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+            .input-wrapper {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            input[type="submit"] {
+                width: 100%;
+            }
+        }
+
+        /* Loading animation for new items */
+        .todo-item-enter {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Hello Junoon Batch 8 (Jenkins)<br><small style="font-size: 0.7em; font-weight: 400;">Write your plan on Learning Jenkins</small></h1>
+        
+        <div class="todo-list">
+            <ul>
+                <% if (todolist && todolist.length > 0) { %>
+                    <% todolist.forEach(function(todo, index) { %>
+                    <li class="todo-item-enter" style="animation-delay: <%= index * 0.1 %>s">
+                        <div class="todo-content"><%- todo %></div>
+                        <div class="action-buttons">
+                            <a href="/todo/<%= index %>" class="edit-btn" title="Edit item">✎</a>
+                            <a href="/todo/delete/<%= index %>" class="delete-btn" title="Delete item">✘</a>
+                        </div>
+                    </li>
+                    <% }); %>
+                <% } else { %>
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        <div class="empty-state-text">No todos yet! Add your first Jenkins learning goal below.</div>
+                    </div>
+                <% } %>
+            </ul>
+
+            <form action="/todo/add/" method="post" class="add-form">
+                <div class="form-group">
+                    <label for="newtodo">What should I do?</label>
+                    <div class="input-wrapper">
+                        <input type="text" name="newtodo" id="newtodo" placeholder="e.g., Learn Jenkins pipeline syntax" autofocus />
+                        <input type="submit" value="Add Todo" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactive enhancements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Smooth scroll and focus management
+            const newTodoInput = document.getElementById('newtodo');
+            
+            // Add ripple effect to buttons
+            document.querySelectorAll('input[type="submit"], .delete-btn, .edit-btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    if (this.tagName === 'INPUT') {
+                        // Form validation
+                        if (this.type === 'submit' && newTodoInput && !newTodoInput.value.trim()) {
+                            e.preventDefault();
+                            newTodoInput.focus();
+                            newTodoInput.style.borderColor = '#ff6b6b';
+                            setTimeout(() => {
+                                newTodoInput.style.borderColor = '#e1e8ed';
+                            }, 2000);
+                            return;
+                        }
+                    }
+                });
+            });
+
+            // Auto-resize input and add enter key support
+            if (newTodoInput) {
+                newTodoInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (this.value.trim()) {
+                            this.form.submit();
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
