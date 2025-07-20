@@ -1,5 +1,5 @@
 pipeline{
-    agent { label 'dev-server' }
+    agent any
     
     stages{
         stage("Code Clone"){
@@ -11,7 +11,7 @@ pipeline{
         stage("Code Build & Test"){
             steps{
                 echo "Code Build Stage"
-                sh "docker build -t node-app ."
+                sh "docker build -t todo-app ."
             }
         }
         stage("Push To DockerHub"){
@@ -21,8 +21,8 @@ pipeline{
                     usernameVariable:"dockerHubUser", 
                     passwordVariable:"dockerHubPass")]){
                 sh 'echo $dockerHubPass | docker login -u $dockerHubUser --password-stdin'
-                sh "docker image tag node-app:latest ${env.dockerHubUser}/node-app:latest"
-                sh "docker push ${env.dockerHubUser}/node-app:latest"
+                sh "docker image tag todo-app:latest ${env.dockerHubUser}/todo-app:latest"
+                sh "docker push ${env.dockerHubUser}/todo-app:latest"
                 }
             }
         }
